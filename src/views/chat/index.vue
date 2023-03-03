@@ -1,25 +1,27 @@
 <script setup lang='ts'>
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { NButton, NInput, useDialog, useMessage } from 'naive-ui'
+import { NButton, NInput, useDialog } from 'naive-ui'
 import { Message } from './components'
 import { useScroll } from './hooks/useScroll'
 import { useChat } from './hooks/useChat'
+import { useCopyCode } from './hooks/useCopyCode'
 import { HoverButton, SvgIcon } from '@/components/common'
 import { useBasicLayout } from '@/hooks/useBasicLayout'
 import { useChatStore } from '@/store'
 import { fetchChatAPIProcess } from '@/api'
+import { t } from '@/locales'
 
 let controller = new AbortController()
 
 const route = useRoute()
 const dialog = useDialog()
-const ms = useMessage()
 
 const chatStore = useChatStore()
 
+useCopyCode()
 const { isMobile } = useBasicLayout()
-const { addChat, updateChat } = useChat()
+const { addChat, updateChat, updateChatSome, getChatByUuidAndIndex } = useChat()
 const { scrollRef, scrollToBottom } = useScroll()
 
 const { uuid } = route.params as { uuid: string }
@@ -71,7 +73,7 @@ async function onConversation() {
     +uuid,
     {
       dateTime: new Date().toLocaleString(),
-      text: 'Aha, Thinking...',
+      text: '',
       loading: true,
       inversion: false,
       error: false,
@@ -118,10 +120,34 @@ async function onConversation() {
     })
   }
   catch (error: any) {
-    let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    const errorMessage = error?.message ?? t('common.wrong')
 
-    if (error.message === 'canceled')
-      errorMessage = 'Request canceled. Please try again.'
+    if (error.message === 'canceled') {
+      updateChatSome(
+        +uuid,
+        dataSources.value.length - 1,
+        {
+          loading: false,
+        },
+      )
+      scrollToBottom()
+      return
+    }
+
+    const currentChat = getChatByUuidAndIndex(+uuid, dataSources.value.length - 1)
+
+    if (currentChat?.text && currentChat.text !== '') {
+      updateChatSome(
+        +uuid,
+        dataSources.value.length - 1,
+        {
+          text: `${currentChat.text}\n[${errorMessage}]`,
+          error: false,
+          loading: false,
+        },
+      )
+      return
+    }
 
     updateChat(
       +uuid,
@@ -165,7 +191,7 @@ async function onRegenerate(index: number) {
     index,
     {
       dateTime: new Date().toLocaleString(),
-      text: 'Aha, Let me think again...',
+      text: '',
       inversion: false,
       error: false,
       loading: true,
@@ -210,10 +236,18 @@ async function onRegenerate(index: number) {
     })
   }
   catch (error: any) {
-    let errorMessage = error?.message ?? 'Something went wrong, please try again later.'
+    if (error.message === 'canceled') {
+      updateChatSome(
+        +uuid,
+        index,
+        {
+          loading: false,
+        },
+      )
+      return
+    }
 
-    if (error.message === 'canceled')
-      errorMessage = 'Request canceled. Please try again.'
+    const errorMessage = error?.message ?? t('common.wrong')
 
     updateChat(
       +uuid,
@@ -239,13 +273,12 @@ function handleDelete(index: number) {
     return
 
   dialog.warning({
-    title: 'Delete Message',
-    content: 'Are you sure to delete this message?',
-    positiveText: 'Yes',
-    negativeText: 'No',
+    title: t('chat.deleteMessage'),
+    content: t('chat.deleteMessageConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
     onPositiveClick: () => {
       chatStore.deleteChatByUuid(+uuid, index)
-      ms.success('Message deleted successfully.')
     },
   })
 }
@@ -255,10 +288,10 @@ function handleClear() {
     return
 
   dialog.warning({
-    title: 'Clear Chat',
-    content: 'Are you sure to clear this chat?',
-    positiveText: 'Yes',
-    negativeText: 'No',
+    title: t('chat.clearChat'),
+    content: t('chat.clearChatConfirm'),
+    positiveText: t('common.yes'),
+    negativeText: t('common.no'),
     onPositiveClick: () => {
       chatStore.clearChatByUuid(+uuid)
     },
@@ -343,8 +376,8 @@ onUnmounted(() => {
               @regenerate="onRegenerate(index)"
               @delete="handleDelete(index)"
             />
-            <div class="flex justify-center">
-              <NButton v-if="loading" ghost @click="handleStop">
+            <div class="sticky bottom-0 left-0 flex justify-center">
+              <NButton v-if="loading" type="warning" @click="handleStop">
                 <template #icon>
                   <SvgIcon icon="ri:stop-circle-line" />
                 </template>

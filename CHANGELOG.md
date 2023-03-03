@@ -1,3 +1,43 @@
+## v2.9.1
+
+`2023-03-02`
+
+### Feature
+- 代码块添加当前代码语言显示和复制功能[#197][#196]
+- 完善多语言，现在可以切换中英文显示
+
+## Enhancement
+- 由[Zo3i](https://github.com/Chanzhaoyu/chatgpt-web/pull/187) 完善 `docker-compose` 部署文档
+
+### BugFix
+- 由 [ottocsb](https://github.com/Chanzhaoyu/chatgpt-web/pull/200) 修复头像修改不同步的问题
+## Other
+- 更新依赖至最新
+- 修改 `README` 内容
+## v2.9.0
+
+`2023-03-02`
+
+### Feature
+- 现在能复制带格式的消息文本
+- 新设计的设定页面，可以自定义姓名、描述、头像（链接方式）
+- 新增`403`和`404`页面以便扩展
+
+## Enhancement
+- 更新 `chatgpt` 使 `ChatGPTAPI` 支持 `gpt-3.5-turbo-0301`（默认）
+- 取消了前端超时限制设定
+
+## v2.8.3
+
+`2023-03-01`
+
+### Feature
+- 消息已输出内容不会因为中断而消失[#167]
+- 添加复制消息按钮[#133]
+
+### Other
+- `README` 添加声明内容
+
 ## v2.8.2
 
 `2023-02-28`
