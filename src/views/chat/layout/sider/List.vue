@@ -87,7 +87,7 @@ function isActive(uuid: number) {
                       <SvgIcon icon="ri:delete-bin-line" />
                     </button>
                   </template>
-                  Are you sure to clear this history?
+                  你确定要清空所有历史吗?
                 </NPopconfirm>
               </template>
             </div>

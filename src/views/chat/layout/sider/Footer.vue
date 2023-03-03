@@ -1,12 +1,12 @@
 <script setup lang='ts'>
-import { computed, h, ref } from 'vue'
+import { computed, h } from 'vue'
 import { NDropdown } from 'naive-ui'
-import { HoverButton, Setting, SvgIcon, UserAvatar } from '@/components/common'
+import { HoverButton, SvgIcon, UserAvatar } from '@/components/common'
 import { useAppStore } from '@/store'
 
 const appStore = useAppStore()
 
-const show = ref(false)
+// const show = ref(false)
 
 const theme = computed(() => appStore.theme)
 
@@ -53,12 +53,12 @@ function handleThemeChange(key: 'light' | 'dark' | 'auto') {
       </HoverButton>
     </NDropdown>
 
-    <HoverButton tooltip="Setting" @click="show = true">
+    <!-- <HoverButton tooltip="Setting" @click="show = true">
       <span class="text-xl text-[#4f555e] dark:text-white">
         <SvgIcon icon="ri:settings-4-line" />
       </span>
-    </HoverButton>
+    </HoverButton> -->
 
-    <Setting v-model:visible="show" />
+    <!-- <Setting v-model:visible="show" /> -->
   </footer>
 </template>
