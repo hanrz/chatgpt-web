@@ -11,8 +11,8 @@ const userInfo = computed(() => userStore.userInfo)
 </script>
 
 <template>
-  <div class="flex items-center">
-    <div class="w-10 h-10 overflow-hidden rounded-full">
+  <div class="flex items-center overflow-hidden">
+    <div class="w-10 h-10 overflow-hidden rounded-full shrink-0">
       <template v-if="isString(userInfo.avatar) && userInfo.avatar.length > 0">
         <NAvatar
           size="large"
@@ -25,11 +25,17 @@ const userInfo = computed(() => userStore.userInfo)
         <NAvatar size="large" round :src="defaultAvatar" />
       </template>
     </div>
+<<<<<<< HEAD
     <div class="ml-2">
       <h2 class="font-bold text-md">
         {{ userInfo.name ?? 'Username' }}
+=======
+    <div class="flex-1 min-w-0 ml-2">
+      <h2 class="overflow-hidden font-bold text-md text-ellipsis whitespace-nowrap">
+        {{ userInfo.name ?? 'ChenZhaoYu' }}
+>>>>>>> 9bd88eac844625d4f743838e84c8923cd8c42cf3
       </h2>
-      <p class="text-xs text-gray-500">
+      <p class="overflow-hidden text-xs text-gray-500 text-ellipsis whitespace-nowrap">
         <span
           v-if="isString(userInfo.description) && userInfo.description !== ''"
           v-html="userInfo.description"
