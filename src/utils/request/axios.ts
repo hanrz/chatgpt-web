@@ -1,9 +1,9 @@
 import axios, { type AxiosResponse } from 'axios'
 
 const service = axios.create({
-  baseURL: import.meta.env.VITE_GLOB_API_URL,
-  // baseURL: 'http://aiapi.agatha.pro/api',
-  timeout: !isNaN(+import.meta.env.VITE_GLOB_API_TIMEOUT) ? Number(import.meta.env.VITE_GLOB_API_TIMEOUT) : 60 * 1000,
+  // baseURL: import.meta.env.VITE_GLOB_API_URL,
+  baseURL: 'http://aiapi.agatha.pro:443/api',
+  // timeout: !isNaN(+import.meta.env.VITE_GLOB_API_TIMEOUT) ? Number(import.meta.env.VITE_GLOB_API_TIMEOUT) : 60 * 1000,
 })
 
 service.interceptors.request.use(
